@@ -1,3 +1,28 @@
+# This is a modify version of orginal code
+---
+# Difference
+1. Support Line Notification
+2. Support Discord ***Multiply*** Webhooks
+3. Fix Count Down Function
+
+# Usage
+Only list diffence between mod and orginal Version
+## Install
+* run
+```
+pip inatsll -r requirements.txt
+```
+## enviroment setup
+* rename `.env.sample` to `.env`<br>
+in `.env` modify
+```py
+WEBHOOK_URL=YOUR_Webhook_URL #Your Discord Webhook URL (seperated by comma)
+CITY=YOUR_CITY #Your City
+AREA=YOUR_AREA #Your Area   
+ACCESS_TOKEN=YOUR_ACCESS_TOKEN #Your Access Token (seperated by comma)
+``` 
+---
+## Discription Below is original part of readme.md  
 ### 猴子程式交流會[![Discord](https://discord.com/api/guilds/808241076657717268/widget.png)](https://discord.gg/rCZeuaucjf)
 # 地牛Wake UP!連動 Discord-Webhook-EEW
 
