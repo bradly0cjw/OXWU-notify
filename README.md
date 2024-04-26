@@ -10,7 +10,7 @@ Only list diffence between mod and orginal Version
 ## Install
 * run
 ```
-pip inatsll -r requirements.txt
+pip install -r requirements.txt
 ```
 ## enviroment setup
 * rename `.env.sample` to `.env`<br>
