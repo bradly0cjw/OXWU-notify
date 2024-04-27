@@ -22,7 +22,7 @@ with open('file.json', mode='r', encoding='UTF8') as jfile:
     jdate1 = json.load(jfile)
 
 intensity = re.sub(r"(\d)$", "\\1級", jdate1["1"]).replace("-", "弱").replace("+", "強")
-sec = int(jdate1["2"]) + 2
+sec = int(jdate1["2"])
 
 
 def lineNotifyMessage(line_token, sec, city, Area, intensity):
