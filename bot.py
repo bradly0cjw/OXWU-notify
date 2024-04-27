@@ -1,14 +1,14 @@
 import re
 import os
 import json
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from discord_webhook import DiscordWebhook, DiscordEmbed
 import requests
 from time import sleep
 import concurrent.futures
 
 # import asyncio
-load_dotenv()
+# load_dotenv()
 
 countdown = True
 with open('env.json', mode='r', encoding='UTF8') as jfile:
