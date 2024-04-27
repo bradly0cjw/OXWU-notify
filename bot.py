@@ -78,7 +78,7 @@ def discordNotifyMessage(Webhook_URL, sec, city, Area, intensity, countdown):
 
 def main():
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        # [executor.submit(lineNotifyMessage(x, sec, city, Area, intensity)) for x in line_token]
+        [executor.submit(lineNotifyMessage(x, sec, city, Area, intensity)) for x in line_token]
         pass
 
     # if len(Webhook_URL) !=1:
