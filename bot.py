@@ -39,10 +39,37 @@ def discordNotifyMessage(Webhook_URL, sec, city, Area, intensity, countdown):
     webhook = DiscordWebhook(url=Webhook_URL, username="地牛Wake UP!",
                              avatar_url="https://cdn.discordapp.com/attachments/825307887219114034/902494942352519168/FB_IMG_1635241955969.jpg",
                              content=f'@everyone \n倒數{sec}秒抵達!')
-    if int(intensity[0]) >= 4:
-        embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)', color='ff0000')
-    else:
-        embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)', color='4DFD4D')
+    # if int(intensity[0]) >= 4:
+    #     embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)', color='ff0000')
+    # else:
+    #     embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)', color='4DFD4D')
+    embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)')
+    match (int(intensity[0])):
+        case 0:
+            embed.set_color('f4f9ff')
+        case 1:
+            embed.set_color('99dabb')
+        case 2:
+            embed.set_color('4cbe88')
+        case 3:
+            embed.set_color('00a355')
+        case 4:
+            embed.set_color('f0cc50')
+        case 5:
+            match (str(intensity[1])):
+                case "弱":
+                    embed.set_color('fb9330')
+                case "強":
+                    embed.set_color('f6642c')
+        case 6:
+            match (str(intensity[1])):
+                case "弱":
+                    embed.set_color('ff1920')
+                case "強":
+                    embed.set_color('ce0000')
+        case 7:
+            embed.set_color('6e30a1')
+        
     embed.set_author(name='Powered by 地牛Wake UP!',
                      icon_url='https://cdn.discordapp.com/attachments/825307887219114034/902494942352519168/FB_IMG_1635241955969.jpg')
     embed.set_timestamp()
