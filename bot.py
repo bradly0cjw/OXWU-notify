@@ -83,7 +83,7 @@ def discordNotifyMessage(Webhook_URL, sec, city, Area, intensity, countdown):
     #     return
     if sec == 0:
         webhook.content = f'@everyone \n已抵達!'
-        embed.set_color('03b2f8')
+        # embed.set_color('03b2f8')
         webhook.edit()
         return
 
@@ -98,7 +98,7 @@ def discordNotifyMessage(Webhook_URL, sec, city, Area, intensity, countdown):
         if sec == 0:
             sleep(0.6)
             webhook.content = f'@everyone \n已抵達!'
-            embed.set_color('03b2f8')
+            # embed.set_color('03b2f8')
             webhook.edit()
             break
 
