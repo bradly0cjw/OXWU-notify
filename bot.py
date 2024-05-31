@@ -50,12 +50,12 @@ def discordNotifyMessage(Webhook_URL,enable, sec, city, Area, intensity, countdo
         return
     webhook = DiscordWebhook(url=Webhook_URL, username="地牛Wake UP!",
                              avatar_url="https://cdn.discordapp.com/attachments/825307887219114034/902494942352519168/FB_IMG_1635241955969.jpg",
-                             content=f'@everyone \n倒數{sec}秒抵達!')
+                             content=f'@everyone \n# 倒數{sec}秒抵達!')
     # if int(intensity[0]) >= 4:
     #     embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)', color='ff0000')
     # else:
     #     embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)', color='4DFD4D')
-    embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)')
+    embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)\n# 警報秒數: `'+str(sec)+'`秒')
     match (int(intensity[0])):
         case 0:
             embed.set_color('f4f9ff')
@@ -104,12 +104,12 @@ def discordNotifyMessage(Webhook_URL,enable, sec, city, Area, intensity, countdo
 
         sleep(0.6)
 
-        webhook.content = f'@everyone \n倒數{sec}秒後到達!'
+        webhook.content = f'@everyone \n# 倒數{sec}秒後到達!'
         webhook.edit()
 
         if sec == 0:
             sleep(0.6)
-            webhook.content = f'@everyone \n已抵達!'
+            webhook.content = f'@everyone \n***已抵達!***'
             # embed.set_color('03b2f8')
             webhook.edit()
             break
