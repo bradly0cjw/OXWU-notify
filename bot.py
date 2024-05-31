@@ -11,12 +11,20 @@ import concurrent.futures
 # load_dotenv()
 
 countdown = True
-with open('env.json', mode='r', encoding='UTF8') as jfile:
-    jdata = json.load(jfile)
-Webhook_URL = [temp['url'] for temp in jdata['WEBHOOK_URL']]
-city = jdata['CITY']
-Area = jdata['AREA']
-line_token = [temp['token'] for temp in jdata['ACCESS_TOKEN']]
+
+def load_config():
+    with open('env.json', mode='r', encoding='UTF8') as jfile:
+        jdata = json.load(jfile)
+    return {
+        'webhook_url': [temp['url'] for temp in jdata['WEBHOOK_URL']],
+        'webhook_enable': [temp['enabled'] for temp in jdata['WEBHOOK_URL']],
+        'city': jdata['CITY'],
+        'area': jdata['AREA'],
+        'line_token': [temp['token'] for temp in jdata['ACCESS_TOKEN']],
+        'line_enable': [temp['enabled'] for temp in jdata['ACCESS_TOKEN']],
+    }
+    
+config = load_config()
 
 with open('file.json', mode='r', encoding='UTF8') as jfile:
     jdate1 = json.load(jfile)
@@ -25,7 +33,9 @@ intensity = re.sub(r"(\d)$", "\\1級", jdate1["1"]).replace("-", "弱").replace(
 sec = int(jdate1["2"])
 
 
-def lineNotifyMessage(line_token, sec, city, Area, intensity):
+def lineNotifyMessage(line_token,line_enable, sec, city, Area, intensity):
+    if not line_enable:
+        return
     linecontent = f"\n倒數{sec}秒後抵達!" + '\n' + f"{city} {Area} {intensity}"
     headers = {
         'Authorization': f'Bearer {line_token}',
@@ -35,7 +45,9 @@ def lineNotifyMessage(line_token, sec, city, Area, intensity):
         requests.post('https://notify-api.line.me/api/notify', headers=headers, data={'message': '\n震度較大 注意安全'})
 
 
-def discordNotifyMessage(Webhook_URL, sec, city, Area, intensity, countdown):
+def discordNotifyMessage(Webhook_URL,enable, sec, city, Area, intensity, countdown):
+    if not enable:
+        return
     webhook = DiscordWebhook(url=Webhook_URL, username="地牛Wake UP!",
                              avatar_url="https://cdn.discordapp.com/attachments/825307887219114034/902494942352519168/FB_IMG_1635241955969.jpg",
                              content=f'@everyone \n倒數{sec}秒抵達!')
@@ -105,14 +117,16 @@ def discordNotifyMessage(Webhook_URL, sec, city, Area, intensity, countdown):
 
 def main():
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        [executor.submit(lineNotifyMessage(x, sec, city, Area, intensity)) for x in line_token]
-        pass
+        secret= zip(config['line_token'], config['line_enable'])
+        [executor.submit(lineNotifyMessage(x[0], x[1], sec, config['city'], config['area'], intensity)) for x in secret]
+    pass
 
     # if len(Webhook_URL) !=1:
     # countdown = False
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        [executor.submit(discordNotifyMessage, y, sec, city, Area, intensity, countdown) for y in Webhook_URL]
+        secret= zip(config['webhook_url'], config['webhook_enable'])
+        [executor.submit(discordNotifyMessage(x[0], x[1], sec, config['city'], config['area'], intensity, countdown)) for x in secret]
         pass
     pass
 
