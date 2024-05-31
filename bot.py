@@ -5,6 +5,7 @@ import json
 from discord_webhook import DiscordWebhook, DiscordEmbed
 import requests
 from time import sleep
+import time
 import concurrent.futures
 
 # import asyncio
@@ -26,6 +27,42 @@ def load_config():
     
 config = load_config()
 
+def scan():
+    try:
+        with open('report.json', mode='r', encoding='UTF8') as jfile:
+            jdate = json.load(jfile)
+            curt= time.time_ns()
+            deltatime=curt-jdate['time']
+            jdate['time'] = curt
+            # print(deltatime)
+            # 10 seconds
+            if deltatime > 10000000000:
+                jdate['report'] = 1
+                with open('report.json', mode='w', encoding='UTF8') as jfile:
+                    json.dump(jdate, jfile, ensure_ascii=False, indent=4)
+            else:
+                jdate['report']=int(jdate['report'])+1
+                with open('report.json', mode='w', encoding='UTF8') as jfile:
+                    json.dump(jdate, jfile, ensure_ascii=False, indent=4)
+        return {
+            'num':jdate['report'],
+            'time':jdate['time']
+            }
+    except:
+        print('error')
+        with open('report.json', mode='w', encoding='UTF8') as jfile:
+            jdate = {
+                'time': time.time_ns(),
+                'report': 1
+            }
+            json.dump(jdate, jfile, ensure_ascii=False, indent=4)
+        return {
+            'num':jdate['report'],
+            'time':jdate['time']
+            }
+    
+rep_config=scan()             
+
 with open('file.json', mode='r', encoding='UTF8') as jfile:
     jdate1 = json.load(jfile)
 
@@ -36,7 +73,7 @@ sec = int(jdate1["2"])
 def lineNotifyMessage(line_token,line_enable, sec, city, Area, intensity):
     if not line_enable:
         return
-    linecontent = f"\n倒數{sec}秒後抵達!" + '\n' + f"{city} {Area} {intensity}"
+    linecontent = f"\n【地震速報】第{rep_config['num']}報\n倒數{sec}秒後抵達!" + '\n' + f"{city} {Area} {intensity}"
     headers = {
         'Authorization': f'Bearer {line_token}',
     }
@@ -55,7 +92,7 @@ def discordNotifyMessage(Webhook_URL,enable, sec, city, Area, intensity, countdo
     #     embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)', color='ff0000')
     # else:
     #     embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)', color='4DFD4D')
-    embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)\n# 警報秒數: `'+str(sec)+'`秒')
+    embed = DiscordEmbed(title=':rotating_light:【地震速報】第'+str(rep_config['num'])+'報', description='慎防搖晃(預估震度)\n# 警報秒數: `'+str(sec)+'`秒')
     match (int(intensity[0])):
         case 0:
             embed.set_color('f4f9ff')
@@ -116,6 +153,7 @@ def discordNotifyMessage(Webhook_URL,enable, sec, city, Area, intensity, countdo
 
 
 def main():
+
     with concurrent.futures.ThreadPoolExecutor() as executor:
         secret= zip(config['line_token'], config['line_enable'])
         [executor.submit(lineNotifyMessage(x[0], x[1], sec, config['city'], config['area'], intensity)) for x in secret]
