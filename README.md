@@ -32,35 +32,37 @@ in `env.json` modify
 {
     "WEBHOOK_URL": [
         {
-            "name": "optional", //name (optional)
-            "enabled": true, //enable this entry (boolean)
-            "url": "Your Webhook URL" //Discord Webhook URL
+            "name": "optional", #name (optional)
+            "enabled": true, #enable this entry (boolean)
+            "url": "Your Webhook URL" #Discord Webhook URL
         },
         {
             "name": "optional",
             "enabled": false,
             "url": "Your Webhook URL"
         }
+        #add here
     ],
-    "CITY": "Your City", //Your City
-    "AREA": "Your Area", //Your Area
+    "CITY": "Your City", #Your City
+    "AREA": "Your Area", #Your Area
     "ACCESS_TOKEN": [
         {
-            "name": "optional", //name (optional)
-            "enabled": false, //enable this entry (boolean)
-            "token": "Your Access Token" //Line Access Token
+            "name": "optional", #name (optional)
+            "enabled": false, #enable this entry (boolean)
+            "token": "Your Access Token" #Line Access Token
         },
         {
             "name": "optional",
             "enabled": false,
             "token": "Your Access Token"
         }
+        #add here
     ]
 }
 ``` 
 
 > [!TIP]    
-> If you want to add multiple instance, add following code at the end entry.
+> If you want to add multiple instance, add following code at the end of the entry.
 
 ```py
 Disocrd
