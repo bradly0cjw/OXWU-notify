@@ -11,22 +11,6 @@ import concurrent.futures
 # import asyncio
 # load_dotenv()
 
-countdown = True
-
-def load_config():
-    with open('env.json', mode='r', encoding='UTF8') as jfile:
-        jdata = json.load(jfile)
-    return {
-        'webhook_url': [temp['url'] for temp in jdata['WEBHOOK_URL']],
-        'webhook_enable': [temp['enabled'] for temp in jdata['WEBHOOK_URL']],
-        'city': jdata['CITY'],
-        'area': jdata['AREA'],
-        'line_token': [temp['token'] for temp in jdata['ACCESS_TOKEN']],
-        'line_enable': [temp['enabled'] for temp in jdata['ACCESS_TOKEN']],
-    }
-    
-config = load_config()
-
 def scan():
     try:
         with open('report.json', mode='r', encoding='UTF8') as jfile:
@@ -61,7 +45,25 @@ def scan():
             'time':jdate['time']
             }
     
-rep_config=scan()             
+rep_config=scan()    
+
+countdown = True
+
+def load_config():
+    with open('env.json', mode='r', encoding='UTF8') as jfile:
+        jdata = json.load(jfile)
+    return {
+        'webhook_url': [temp['url'] for temp in jdata['WEBHOOK_URL']],
+        'webhook_enable': [temp['enabled'] for temp in jdata['WEBHOOK_URL']],
+        'city': jdata['CITY'],
+        'area': jdata['AREA'],
+        'line_token': [temp['token'] for temp in jdata['ACCESS_TOKEN']],
+        'line_enable': [temp['enabled'] for temp in jdata['ACCESS_TOKEN']],
+    }
+    
+config = load_config()
+
+         
 
 with open('file.json', mode='r', encoding='UTF8') as jfile:
     jdate1 = json.load(jfile)
