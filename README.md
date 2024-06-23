@@ -13,11 +13,12 @@
 > There is lot of tutoriel about how to get Discord Webhook URL and Line Acces Token.
 
 > [!WARNING]
-> Due to EULA of OX-WakeUP, This notify system is only for personal use. Do not use this for commercial use or use this to provide service to others.
+> Due to EULA of OX-WakeUP, This notify system is only for personal use.<br>
+> Do not use this for commercial use or use this to provide service to others.
 
 > [!CAUTION]
-> Count Down Feature is for reference only, it may not be accurate due to network delay, different devices, etc.
-> Repository owner and autuor are not responsible for any loss caused by this feature.
+> Count Down Feature is for reference only, it may not be accurate due to network delay, different devices, etc.<br>
+> Repository owner and autuor are not responsible for any loss caused by this feature.<br>
 > Use at your own risk.
 
 ## Install
