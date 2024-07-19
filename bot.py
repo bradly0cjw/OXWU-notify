@@ -1,3 +1,4 @@
+import datetime
 import re
 # import os
 import json
@@ -75,7 +76,7 @@ sec = int(jdate1["2"])
 def lineNotifyMessage(line_token,line_enable, sec, city, Area, intensity):
     if not line_enable:
         return
-    linecontent = f"\n【地震速報】第{rep_config['num']}報\n倒數{sec}秒後抵達!" + '\n' + f"{city} {Area} {intensity}"
+    linecontent = f"\n【地震速報】第{rep_config['num']}報\n倒數{sec}秒後抵達!" + '\n' + f"{city} {Area} {intensity}"+'\n'+"發布時間: "+datetime.datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S\n%Z')
     headers = {
         'Authorization': f'Bearer {line_token}',
     }
@@ -94,7 +95,8 @@ def discordNotifyMessage(Webhook_URL,enable, sec, city, Area, intensity, countdo
     #     embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)', color='ff0000')
     # else:
     #     embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)', color='4DFD4D')
-    embed = DiscordEmbed(title=':rotating_light:【地震速報】第'+str(rep_config['num'])+'報', description='慎防搖晃(預估震度)\n# 警報秒數: `'+str(sec)+'`秒')
+    embed = DiscordEmbed(title=':rotating_light:【地震速報】第'+str(rep_config['num'])+'報', 
+                         description='慎防搖晃(預估震度)\n# 警報秒數: `'+str(sec)+'`秒\n-# 發布時間: `'+datetime.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S` \n-# `%Z")+'`')
     match (int(intensity[0])):
         case 0:
             embed.set_color('f4f9ff')
