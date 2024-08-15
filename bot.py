@@ -79,7 +79,7 @@ sec = int(jdate1["2"])
 def lineNotifyMessage(line_token,line_enable, sec, city, Area, intensity):
     if not line_enable:
         return
-    linecontent = f"\n【地震速報】第{rep_config['num']}報\n倒數{sec}秒後抵達!" + '\n' + f"{city} {Area} {intensity}"+'\n'+"發布時間: "+datetime.datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S\n%Z')+'\nSend from:'+platform
+    linecontent = f"\n【地震速報】第{rep_config['num']}報\n倒數{sec}秒後抵達!" + '\n' + f"{city} {Area} {intensity}"+'\n'+"發布時間: "+datetime.datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S\n%Z')+'\nSend from: '+platform
     headers = {
         'Authorization': f'Bearer {line_token}',
     }
@@ -128,7 +128,7 @@ def discordNotifyMessage(Webhook_URL,enable, sec, city, Area, intensity, countdo
         
     embed.set_author(name='Powered by 地牛Wake UP!',
                      icon_url='https://cdn.discordapp.com/attachments/825307887219114034/902494942352519168/FB_IMG_1635241955969.jpg')
-    embed.set_footer(text='Send from:'+platform)
+    embed.set_footer(text='Send from: '+platform)
     embed.set_timestamp()
     embed.add_embed_field(name=f"{city}", value=f"{Area} {intensity}")
     webhook.add_embed(embed)
