@@ -100,7 +100,7 @@ Python的部分，使用官網或微軟商店安裝。
 # 安裝套件
 
 > [!CAUTION]  
-> This part is deprecated
+> This part is obsoleted
 
 開啟`Install.bat`，輸入`1`並按下Enter後就會開始安裝。
 ![image](https://cdn.discordapp.com/attachments/829731415435903018/902556564878164059/unknown.png)
@@ -109,7 +109,7 @@ Python的部分，使用官網或微軟商店安裝。
 # 修改資料
 
 > [!CAUTION]  
-> This part is deprecated
+> This part is obsoleted
 
 在 `.env` 裡
 ```py
