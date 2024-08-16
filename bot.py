@@ -58,11 +58,11 @@ def load_config():
         jdata = json.load(jfile)
     return {
         'webhook_url': [temp['url'] for temp in jdata['WEBHOOK_URL']],
-        'webhook_enable': [temp['enabled'] for temp in jdata['WEBHOOK_URL']],
+        'webhook_threshold': [temp['threshold'] for temp in jdata['WEBHOOK_URL']],
         'city': jdata['CITY'],
         'area': jdata['AREA'],
         'line_token': [temp['token'] for temp in jdata['ACCESS_TOKEN']],
-        'line_enable': [temp['enabled'] for temp in jdata['ACCESS_TOKEN']],
+        'line_threshold': [temp['threshold'] for temp in jdata['ACCESS_TOKEN']],
     }
     
 config = load_config()
@@ -78,30 +78,22 @@ sec = int(jdate1["2"])
 
 
 def lineNotifyMessage(line_token,line_threshold, sec, city, Area, intensity):
-    try:
-        tmp = re.sub(r"(\-)$", ".0", str(line_threshold))
-        tmp = re.sub(r"(\+)$", ".5", tmp)
-        if float(tmp)>float(intensity_calc) or float(tmp) < 0:
-            return
-    except:
+    if float(line_threshold)>float(intensity_calc) or float(line_threshold) < 0:
         return
-    linecontent = f"\n【地震速報】第{rep_config['num']}報\n倒數{sec}秒後抵達!" + '\n' + f"{city} {Area} {intensity}"+'\n'+"發布時間: "+datetime.datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S\n%Z')+'\nSend from: '+platform
+    linecontent = f"\n【地震速報】第{rep_config['num']}報\n倒數{sec}秒後抵達!" + '\n' + f"{city} {Area} {intensity}"+'\n'+"發布時間: "+datetime.datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S\n%Z')+'\n發送裝置: '+platform
     headers = {
         'Authorization': f'Bearer {line_token}',
     }
     requests.post('https://notify-api.line.me/api/notify', headers=headers, data={'message': linecontent})
-    if int(intensity[0]) >= 4:
-        requests.post('https://notify-api.line.me/api/notify', headers=headers, data={'message': '\n震度較大 注意安全'})
+    # if int(intensity[0]) >= 4:
+    #     requests.post('https://notify-api.line.me/api/notify', headers=headers, data={'message': '\n震度較大 注意安全'})
 
 
 def discordNotifyMessage(Webhook_URL,threshold, sec, city, Area, intensity, countdown):
-    try:
-        tmp = re.sub(r"(\-)$", ".0", str(threshold))
-        tmp = re.sub(r"(\+)$", ".5", tmp)
-        if float(tmp)>float(intensity_calc) or float(tmp) < 0:
-            return
-    except:
+    if float(threshold)>float(intensity_calc) or float(threshold) < 0:
         return
+    threshold = re.sub(r"^([5-6])$", "\\1弱", str(threshold))
+    threshold = re.sub(r"^(\d)$", "\\1級", str(threshold)).replace(".0", "弱").replace(".5", "強")
     webhook = DiscordWebhook(url=Webhook_URL, username="地牛Wake UP!",
                              avatar_url="https://cdn.discordapp.com/attachments/825307887219114034/902494942352519168/FB_IMG_1635241955969.jpg",
                              content=f'@everyone \n# 倒數{sec}秒抵達!')
@@ -114,10 +106,10 @@ def discordNotifyMessage(Webhook_URL,threshold, sec, city, Area, intensity, coun
     embed.set_description("慎防搖晃")
     embed.add_embed_field(name='警報秒數', value=str(sec)+'秒', inline=True)
     embed.add_embed_field(name='預估震度', value=intensity, inline=True)
-    embed.add_embed_field(name='發布時間', value=datetime.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S` \n-# `%Z"), inline=True)
+    embed.add_embed_field(name='發布時間', value=datetime.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S` \n`%Z"), inline=True)
     embed.add_embed_field(name='預警地區', value=city+' '+Area, inline=True)
     embed.add_embed_field(name='預警閾值', value=threshold, inline=True)
-    match (intensity_calc):
+    match (float(intensity_calc)):
         case 0:
             embed.set_color('f4f9ff')
         case 1:
@@ -151,7 +143,7 @@ def discordNotifyMessage(Webhook_URL,threshold, sec, city, Area, intensity, coun
     #     webhook.edit()
     #     return
     if sec == 0:
-        webhook.content = f'@everyone \n已抵達!'
+        webhook.content = f'@everyone \n***已抵達!***'
         # embed.set_color('03b2f8')
         webhook.edit()
         return
@@ -175,7 +167,7 @@ def discordNotifyMessage(Webhook_URL,threshold, sec, city, Area, intensity, coun
 def main():
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        secret= zip(config['line_token'], config['line_enable'])
+        secret= zip(config['line_token'], config['line_threshold'])
         [executor.submit(lineNotifyMessage(x[0], x[1], sec, config['city'], config['area'], intensity)) for x in secret]
     pass
 
@@ -183,7 +175,7 @@ def main():
     # countdown = False
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        secret= zip(config['webhook_url'], config['webhook_enable'])
+        secret= zip(config['webhook_url'], config['webhook_threshold'])
         [executor.submit(discordNotifyMessage(x[0], x[1], sec, config['city'], config['area'], intensity, countdown)) for x in secret]
         pass
     pass

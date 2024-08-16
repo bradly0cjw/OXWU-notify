@@ -42,12 +42,12 @@ in `env.json` modify
     "WEBHOOK_URL": [
         {
             "name": "optional", #name (optional)
-            "threshold": 5+, #threshold of alert 5強 denoted as 5+
+            "threshold": 5.5, #threshold of alert 5強 denoted as 5.5
             "url": "Your Webhook URL" #Discord Webhook URL
         },
         {
             "name": "optional",
-            "threshold": 5-, #threshold of alert 5弱 denoted as 5- or 5
+            "threshold": 5.0, #threshold of alert 5弱 denoted as 5.0 or 5
             "url": "Your Webhook URL"
         }
         #add here
