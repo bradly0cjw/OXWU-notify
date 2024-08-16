@@ -16,4 +16,7 @@
 @echo {"1":"%1","2":"%2"} >file.json
 
 
-PowerShell -WindowStyle Hidden -Command "python bot.py" 
+@REM PowerShell -WindowStyle Hidden -Command "python bot.py" 
+set currentTime=%date% %time%
+echo [%currentTime%] With intensity of %1 in %2 seconds. >>logs.txt
+
