@@ -42,12 +42,12 @@ in `env.json` modify
     "WEBHOOK_URL": [
         {
             "name": "optional", #name (optional)
-            "enabled": true, #enable this entry (boolean)
+            "threshold": 5+, #threshold of alert 5強 denoted as 5+
             "url": "Your Webhook URL" #Discord Webhook URL
         },
         {
             "name": "optional",
-            "enabled": false,
+            "threshold": 5-, #threshold of alert 5弱 denoted as 5- or 5
             "url": "Your Webhook URL"
         }
         #add here
@@ -57,12 +57,12 @@ in `env.json` modify
     "ACCESS_TOKEN": [
         {
             "name": "optional", #name (optional)
-            "enabled": false, #enable this entry (boolean)
+            "threshold": 0, #threshold of alert , 0 means all alert
             "token": "Your Access Token" #Line Access Token
         },
         {
             "name": "optional",
-            "enabled": false,
+            "threshold": -1, #threshold of alert , -1 means no alert
             "token": "Your Access Token"
         }
         #add here
@@ -77,14 +77,14 @@ in `env.json` modify
 Disocrd
         ,{
             "name": "optional",
-            "enabled": false,
+            "threshold": 1,
             "url": "Your Webhook URL"
         }
 
 Line 
         ,{
             "name": "optional",
-            "enabled": false,
+            "threshold": 1,
             "token": "Your Access Token"
         }
 ```

@@ -73,11 +73,17 @@ with open('file.json', mode='r', encoding='UTF8') as jfile:
     jdate1 = json.load(jfile)
 
 intensity = re.sub(r"(\d)$", "\\1級", jdate1["1"]).replace("-", "弱").replace("+", "強")
+intensity_calc = re.sub(r"(\d)$", "\\1", jdate1["1"]).replace("-", ".0").replace("+", ".5")
 sec = int(jdate1["2"])
 
 
-def lineNotifyMessage(line_token,line_enable, sec, city, Area, intensity):
-    if not line_enable:
+def lineNotifyMessage(line_token,line_threshold, sec, city, Area, intensity):
+    try:
+        tmp = re.sub(r"(\-)$", ".0", str(line_threshold))
+        tmp = re.sub(r"(\+)$", ".5", tmp)
+        if float(tmp)>float(intensity_calc) or float(tmp) < 0:
+            return
+    except:
         return
     linecontent = f"\n【地震速報】第{rep_config['num']}報\n倒數{sec}秒後抵達!" + '\n' + f"{city} {Area} {intensity}"+'\n'+"發布時間: "+datetime.datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S\n%Z')+'\nSend from: '+platform
     headers = {
@@ -88,8 +94,13 @@ def lineNotifyMessage(line_token,line_enable, sec, city, Area, intensity):
         requests.post('https://notify-api.line.me/api/notify', headers=headers, data={'message': '\n震度較大 注意安全'})
 
 
-def discordNotifyMessage(Webhook_URL,enable, sec, city, Area, intensity, countdown):
-    if not enable:
+def discordNotifyMessage(Webhook_URL,threshold, sec, city, Area, intensity, countdown):
+    try:
+        tmp = re.sub(r"(\-)$", ".0", str(threshold))
+        tmp = re.sub(r"(\+)$", ".5", tmp)
+        if float(tmp)>float(intensity_calc) or float(tmp) < 0:
+            return
+    except:
         return
     webhook = DiscordWebhook(url=Webhook_URL, username="地牛Wake UP!",
                              avatar_url="https://cdn.discordapp.com/attachments/825307887219114034/902494942352519168/FB_IMG_1635241955969.jpg",
@@ -98,9 +109,15 @@ def discordNotifyMessage(Webhook_URL,enable, sec, city, Area, intensity, countdo
     #     embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)', color='ff0000')
     # else:
     #     embed = DiscordEmbed(title=':rotating_light:【地震速報】', description='慎防搖晃(預估震度)', color='4DFD4D')
-    embed = DiscordEmbed(title=':rotating_light:【地震速報】第'+str(rep_config['num'])+'報', 
-                         description='慎防搖晃(預估震度)\n# 警報秒數: `'+str(sec)+'`秒\n-# 發布時間: `'+datetime.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S` \n-# `%Z")+'`')
-    match (int(intensity[0])):
+    embed = DiscordEmbed()
+    embed.set_title(':rotating_light:【地震速報】第'+str(rep_config['num'])+'報')
+    embed.set_description("慎防搖晃")
+    embed.add_embed_field(name='警報秒數', value=str(sec)+'秒', inline=True)
+    embed.add_embed_field(name='預估震度', value=intensity, inline=True)
+    embed.add_embed_field(name='發布時間', value=datetime.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S` \n-# `%Z"), inline=True)
+    embed.add_embed_field(name='預警地區', value=city+' '+Area, inline=True)
+    embed.add_embed_field(name='預警閾值', value=threshold, inline=True)
+    match (intensity_calc):
         case 0:
             embed.set_color('f4f9ff')
         case 1:
@@ -111,26 +128,21 @@ def discordNotifyMessage(Webhook_URL,enable, sec, city, Area, intensity, countdo
             embed.set_color('00a355')
         case 4:
             embed.set_color('f0cc50')
-        case 5:
-            match (str(intensity[1])):
-                case "弱":
-                    embed.set_color('fb9330')
-                case "強":
-                    embed.set_color('f6642c')
-        case 6:
-            match (str(intensity[1])):
-                case "弱":
-                    embed.set_color('ff1920')
-                case "強":
-                    embed.set_color('ce0000')
+        case 5.0:
+            embed.set_color('fb9330')
+        case 5.5:
+            embed.set_color('f6642c')
+        case 6.0:
+            embed.set_color('ff1920')
+        case 6.5:
+            embed.set_color('ce0000')
         case 7:
             embed.set_color('6e30a1')
         
     embed.set_author(name='Powered by 地牛Wake UP!',
                      icon_url='https://cdn.discordapp.com/attachments/825307887219114034/902494942352519168/FB_IMG_1635241955969.jpg')
-    embed.set_footer(text='Send from: '+platform)
+    embed.set_footer(text='發送裝置\n'+platform)
     embed.set_timestamp()
-    embed.add_embed_field(name=f"{city}", value=f"{Area} {intensity}")
     webhook.add_embed(embed)
     webhook.execute()
     # if countdown == False:
